@@ -1,0 +1,15 @@
+.git
+.gitignore
+.vscode
+.idea
+
+WEB-INF/classes
+logs
+temp
+work
+
+*.class
+*.log
+
+README.md
+compile.bat
