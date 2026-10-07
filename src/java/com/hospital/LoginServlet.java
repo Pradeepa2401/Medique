@@ -5,6 +5,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 public class LoginServlet extends HttpServlet {
 
@@ -36,15 +37,24 @@ public class LoginServlet extends HttpServlet {
             return;
         }
 
-        // Store logged-in role in session
-        req.getSession(true).setAttribute("role", role);
+        // Create session
+        HttpSession session = req.getSession(true);
+        session.setAttribute("role", role);
+        session.setAttribute("username", username);
 
-        // Remember preferred role for 30 days
-        Cookie cookie = new Cookie("preferredRole", role);
-        cookie.setMaxAge(60 * 60 * 24 * 30);
-        res.addCookie(cookie);
+        // Store role in cookie so it can survive
+        // across Vercel container instances.
+        Cookie roleCookie = new Cookie("preferredRole", role);
+        roleCookie.setMaxAge(60 * 60 * 24 * 30);
+        roleCookie.setPath("/");
+        res.addCookie(roleCookie);
 
-        // Redirect according to role
+        // Store username in cookie too.
+        Cookie usernameCookie = new Cookie("loggedInUser", username);
+        usernameCookie.setMaxAge(60 * 60 * 24 * 30);
+        usernameCookie.setPath("/");
+        res.addCookie(usernameCookie);
+
         if ("patient".equals(role)) {
             res.sendRedirect("patient.jsp");
         } else if ("doctor".equals(role)) {
