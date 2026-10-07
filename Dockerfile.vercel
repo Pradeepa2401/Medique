@@ -1,0 +1,24 @@
+FROM tomcat:9.0-jdk17-temurin
+
+WORKDIR /build
+
+COPY . .
+
+RUN rm -rf /usr/local/tomcat/webapps/* \
+    && mkdir -p /usr/local/tomcat/webapps/ROOT/WEB-INF/classes \
+    && javac \
+       -cp "/usr/local/tomcat/lib/servlet-api.jar" \
+       -d "/usr/local/tomcat/webapps/ROOT/WEB-INF/classes" \
+       src/java/com/hospital/*.java \
+    && cp index.html /usr/local/tomcat/webapps/ROOT/ \
+    && cp login.jsp /usr/local/tomcat/webapps/ROOT/ \
+    && cp patient.jsp /usr/local/tomcat/webapps/ROOT/ \
+    && cp doctor.jsp /usr/local/tomcat/webapps/ROOT/ \
+    && cp admin.jsp /usr/local/tomcat/webapps/ROOT/ \
+    && cp -r css /usr/local/tomcat/webapps/ROOT/ \
+    && cp -r js /usr/local/tomcat/webapps/ROOT/ \
+    && cp WEB-INF/web.xml /usr/local/tomcat/webapps/ROOT/WEB-INF/
+
+EXPOSE 8080
+
+CMD ["sh", "-c", "PORT=${PORT:-8080}; sed -i \"s/port=\\\"8080\\\"/port=\\\"$PORT\\\"/\" /usr/local/tomcat/conf/server.xml; catalina.sh run"]
