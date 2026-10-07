@@ -1,0 +1,25 @@
+# Java compiled files
+*.class
+
+# Tomcat compiled/deployed files
+WEB-INF/classes/
+logs/
+temp/
+work/
+
+# IDE files
+.vscode/
+.idea/
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Java build output
+build/
+target/
+out/
+
+# Temporary files
+*.tmp
+*.log
